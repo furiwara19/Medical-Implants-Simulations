@@ -1,0 +1,100 @@
+$OMP=8
+
+[ T i t l e ]
+Sample input for dose calculation for charged particle therapy
+
+[ P a r a m e t e r s ]
+ icntl    =           0     # (D=0) 3:ECH 5:NOR 6:SRC 7,8:GSH 11:DSH 12:DUMP
+ maxcas   =          1e6    # (D=10) number of particles per one batch
+ maxbch   =          10     # (D=10) number of batches
+ e-mode   =           2     # (D=0) 0: Normal, 1: Event generator mode
+ negs     =           1     # (D=-1) =-1:original, =0:No, =1:EGS
+ epstfl   =           1     # [EGS](D=0) 0:no, 1:consider density effect based on ICRU90
+ emin(1)  =         1e-3
+ iMeVperu =           1
+
+[ S o u r c e ]
+   s-type =   1             # mono-energetic axial source
+  proj = proton
+    e0 = 62
+set:c1[2.54/2] $ radius of TEgas (site region)
+set:c2[5/2]    $ radius of TEgas (including outer region)
+set:c5[0.186]  $ thickness of wall(PMMA_scale)
+set:c8[0.64]   $ thickness of wall
+set:c4[1.078/2]    $ radius of implant
+set:c7[5]      $ diameter of source
+set:c3[1.0]    $ site diameter
+set:c6[5]      $ length of implant
+
+ $    proj = electron     # kind of incident nucleus          
+ $      e0 =   0.3        # energy of beam [MeV/u]
+       r0 =   c2         # radius_diameter [cm]
+       x0 =   0.0000      # (D=0.0) center position of x-axis [cm]
+       y0 =   0.0000      # (D=0.0) center position of y-axis [cm]
+       z0 =  -c7          # minimum position of z-axis [cm]
+       z1 =  -c7          # maximum position of z-axis [cm]
+      dir =   1.0000      # z-direction of beam [cosine]
+
+[ M a t e r i a l ]
+MAT[ 1 ] 
+            H        2.0
+            O        1.0
+mt1   lwtr.20t
+dedxfile = water_liquid_icru90.txt
+
+MAT[ 2 ]  $ A150 plastic, Table C1 of ICRU36
+      H  -0.101
+      C  -0.776
+      N  -0.035
+      O  -0.052
+      F  -0.017
+     Ca  -0.018
+
+MAT[ 3 ] $ TE-gas (propane), Table C1 of ICRU36
+      H -10.3
+      C -56.9
+      N -3.5
+      O -29.3
+
+MAT[ 5 ] 
+           1H  6.6832156E-02
+          16O  3.3416078E-02
+dedxfile = water_liquid_icru90.txt
+
+mat[6] C 5 O 2 H 8 #PMMA
+
+mat[10] Ti 1 $Ti_implant
+
+mat[12] Au 1 $Au_implant
+
+[ C e l l ]
+ 1   3  -1e-4/(c1*2)*c3   -7           $ TEPC
+ 14  10 -4.52             -3           $ PMMA
+98   0                7   3  -999      $ Void
+99   -1                   999          $ Outer region
+
+[ S u r f a c e ]
+ 2           rcc -c1 0 c4+c1 1.3 0 0 c1
+ 1           S    0 0 c1+2*(c4+c8) (c1+c8)
+ 3           rpp -c6 c6 -c6 c6 -c4 c4 
+ 4           rpp -c7 c7 -c7 c7 -c7 c7
+ 7           S    0 0 c1+2*(c4+c8) c1
+ 999         so   1000.0
+
+[ T-track ] #ìÒéüó±éqÇÃîΩâûâÒêîÇåvéZ
+title    = secondary particles by Medical implants
+mesh     = reg
+reg      = 14
+e-type   = 3
+ne       = 1000
+emin     = 1
+emax     = 100
+unit     = 1
+axis     = eng
+file     = secondary_particles_titanium_proton.out
+part     = all nucleus alpha proton photon electron neutron
+gshow    = 3
+epsout   = 2
+
+
+[END]
