@@ -98,4 +98,23 @@ axis     = sed
 model    = 1
 file     = ydy_PMMA.out
 
+[t-sed]
+title    = microdosimetric_spectra_water_photon_PHITS
+mesh     = reg
+reg      = 1
+material = all
+iechrl   = 72
+se-unit  = 2       #linial energy(y)
+unit     = 7       #ydy
+se-type  = 3
+emin     = 1.0000000E-02
+emax     = 10000.00    
+ne       = 180
+cdiam    = -c3
+letmat   = -5
+part     = all
+axis     = sed
+model    = 1
+file     = yfy_PMMA.out
+
 [END]

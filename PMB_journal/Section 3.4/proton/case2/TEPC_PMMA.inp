@@ -4,7 +4,7 @@ Sample input for dose calculation for charged particle therapy
 
 [ P a r a m e t e r s ]
  icntl    =           0     # (D=0) 3:ECH 5:NOR 6:SRC 7,8:GSH 11:DSH 12:DUMP
- maxcas   =          1e6    # (D=10) number of particles per one batch
+ maxcas   =          1e5    # (D=10) number of particles per one batch
  maxbch   =          10    # (D=10) number of batches
  e-mode   =           2     # (D=0) 0: Normal, 1: Event generator mode
  negs     =           1     # (D=-1) =-1:original, =0:No, =1:EGS
@@ -97,5 +97,24 @@ part     = all
 axis     = sed
 model    = 1
 file     = ydy_PMMA.out
+
+[t-sed]
+title    = microdosimetric_spectra_water_photon_PHITS
+mesh     = reg
+reg      = 1
+material = all
+iechrl   = 72
+se-unit  = 2       #linial energy(y)
+unit     = 7       #ydy
+se-type  = 3
+emin     = 1.0000000E-02
+emax     = 10000.00    
+ne       = 180
+cdiam    = -c3
+letmat   = -5
+part     = all
+axis     = sed
+model    = 1
+file     = yfy_PMMA.out
 
 [END]
